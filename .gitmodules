@@ -1,0 +1,33 @@
+[submodule "modules/MMM-flick-gestures"]
+	path = modules/MMM-flick-gestures
+	url = https://github.com/jancalve/MMM-flick-gestures
+[submodule "modules/MMM-GooglePhotos"]
+	path = modules/MMM-GooglePhotos
+	url = https://github.com/ChrisAcrobat/MMM-GooglePhotos
+[submodule "modules/MMM-iFrame"]
+	path = modules/MMM-iFrame
+	url = https://github.com/alberttwong/MMM-iFrame
+[submodule "modules/MMM-OnScreenMenu"]
+	path = modules/MMM-OnScreenMenu
+	url = https://github.com/shbatm/MMM-OnScreenMenu
+[submodule "modules/MMM-page-indicator"]
+	path = modules/MMM-page-indicator
+	url = https://github.com/edward-shen/MMM-page-indicator
+[submodule "modules/MMM-pages"]
+	path = modules/MMM-pages
+	url = https://github.com/edward-shen/MMM-pages
+[submodule "modules/MMM-PIR-Sensor"]
+	path = modules/MMM-PIR-Sensor
+	url = https://github.com/paviro/MMM-PIR-Sensor
+[submodule "modules/MMM-Screencast"]
+	path = modules/MMM-Screencast
+	url = https://github.com/kevinatown/MMM-Screencast
+[submodule "modules/MMM-SmartTouch"]
+	path = modules/MMM-SmartTouch
+	url = https://github.com/EbenKouao/MMM-SmartTouch
+[submodule "modules/MMM-SystemStats"]
+	path = modules/MMM-SystemStats
+	url = https://github.com/BenRoe/MMM-SystemStats
+[submodule "modules/MMM-Touch"]
+	path = modules/MMM-Touch
+	url = https://github.com/gfischershaw/MMM-Touch
