@@ -1,4 +1,4 @@
-/* global WeatherProvider, WeatherObject, SunCalc */
+/* global WeatherProvider, WeatherObject */
 
 /* Magic Mirror
  * Module: Weather
@@ -18,6 +18,14 @@ WeatherProvider.register("weathergov", {
 	// This isn't strictly necessary, since it will fallback to the provider identifier
 	// But for debugging (and future alerts) it would be nice to have the real name.
 	providerName: "Weather.gov",
+
+	// Set the default config properties that is specific to this provider
+	defaults: {
+		apiBase: "https://api.weather.gov/points/",
+		weatherEndpoint: "/forecast",
+		lat: 0,
+		lon: 0
+	},
 
 	// Flag all needed URLs availability
 	configURLs: false,
@@ -121,7 +129,12 @@ WeatherProvider.register("weathergov", {
 			.finally(() => {
 				// excellent, let's fetch some actual wx data
 				this.configURLs = true;
-				this.fetchCurrentWeather();
+				// handle 'forecast' config, fall back to 'current'
+				if (config.type === "forecast") {
+					this.fetchWeatherForecast();
+				} else {
+					this.fetchCurrentWeather();
+				}
 			});
 	},
 
@@ -145,18 +158,11 @@ WeatherProvider.register("weathergov", {
 		currentWeather.precipitation = this.convertLength(currentWeatherData.precipitationLastHour.value);
 		currentWeather.feelsLikeTemp = this.convertTemp(currentWeatherData.heatIndex.value);
 
-		let isDaytime = true;
-		if (currentWeatherData.icon.includes("day")) {
-			isDaytime = true;
-		} else {
-			isDaytime = false;
-		}
-		currentWeather.weatherType = this.convertWeatherType(currentWeatherData.textDescription, isDaytime);
-
 		// determine the sunrise/sunset times - not supplied in weather.gov data
-		let times = this.calcAstroData(this.config.lat, this.config.lon);
-		currentWeather.sunrise = times[0];
-		currentWeather.sunset = times[1];
+		currentWeather.updateSunTime(this.config.lat, this.config.lon);
+
+		// update weatherType
+		currentWeather.weatherType = this.convertWeatherType(currentWeatherData.textDescription, currentWeather.isDayTime());
 
 		return currentWeather;
 	},
@@ -257,20 +263,6 @@ WeatherProvider.register("weathergov", {
 		} else {
 			return meters;
 		}
-	},
-
-	/*
-	 * Calculate the astronomical data
-	 */
-	calcAstroData(lat, lon) {
-		const sunTimes = [];
-
-		// determine the sunrise/sunset times
-		let times = SunCalc.getTimes(new Date(), lat, lon);
-		sunTimes.push(moment(times.sunrise, "X"));
-		sunTimes.push(moment(times.sunset, "X"));
-
-		return sunTimes;
 	},
 
 	/*
