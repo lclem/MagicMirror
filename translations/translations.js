@@ -5,7 +5,7 @@
  * MIT Licensed.
  */
 
-var translations = {
+let translations = {
 	en: "translations/en.json", // English
 	nl: "translations/nl.json", // Dutch
 	de: "translations/de.json", // German
@@ -46,7 +46,8 @@ var translations = {
 	he: "translations/he.json", // Hebrew
 	uk: "translations/uk.json", // Ukrainian
 	hi: "translations/hi.json", // Hindi
-	gu: "translations/gu.json" // Gujarati
+	gu: "translations/gu.json", // Gujarati
+	gl: "translations/gl.json" // Galego
 };
 
 if (typeof module !== "undefined") {

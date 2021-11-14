@@ -7,12 +7,22 @@
  * By Andrew Pometti
  * MIT Licensed
  *
- * This class is a provider for Weatherbit, based on Nicholas Hubbard's class for Dark Sky & Vince Peri's class for Weather.gov.
+ * This class is a provider for Weatherbit, based on Nicholas Hubbard's class
+ * for Dark Sky & Vince Peri's class for Weather.gov.
  */
 WeatherProvider.register("weatherbit", {
 	// Set the name of the provider.
 	// Not strictly required, but helps for debugging.
 	providerName: "Weatherbit",
+
+	// Set the default config properties that is specific to this provider
+	defaults: {
+		apiBase: "https://api.weatherbit.io/v2.0",
+		weatherEndpoint: "/current",
+		apiKey: "",
+		lat: 0,
+		lon: 0
+	},
 
 	units: {
 		imperial: "I",
@@ -80,7 +90,6 @@ WeatherProvider.register("weatherbit", {
 		currentWeather.windSpeed = parseFloat(currentWeatherData.data[0].wind_spd);
 		currentWeather.windDirection = currentWeatherData.data[0].wind_dir;
 		currentWeather.weatherType = this.convertWeatherType(currentWeatherData.data[0].weather.icon);
-		Log.log("Wx Icon: " + currentWeatherData.data[0].weather.icon);
 		currentWeather.sunrise = moment(currentWeatherData.data[0].sunrise, "HH:mm").add(tzOffset, "m");
 		currentWeather.sunset = moment(currentWeatherData.data[0].sunset, "HH:mm").add(tzOffset, "m");
 

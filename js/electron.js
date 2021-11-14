@@ -2,10 +2,10 @@
 
 const electron = require("electron");
 const core = require("./app.js");
-const Log = require("./logger.js");
+const Log = require("logger");
 
 // Config
-var config = process.env.config ? JSON.parse(process.env.config) : {};
+let config = process.env.config ? JSON.parse(process.env.config) : {};
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -19,14 +19,16 @@ let mainWindow;
  *
  */
 function createWindow() {
-	app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required");
-	var electronOptionsDefaults = {
+	let electronSwitchesDefaults = ["autoplay-policy", "no-user-gesture-required"];
+	app.commandLine.appendSwitch(...new Set(electronSwitchesDefaults, config.electronSwitches));
+	let electronOptionsDefaults = {
 		width: 800,
 		height: 600,
 		x: 0,
 		y: 0,
 		darkTheme: true,
 		webPreferences: {
+			contextIsolation: true,
 			nodeIntegration: false,
 			zoomFactor: config.zoom
 		},
@@ -42,7 +44,7 @@ function createWindow() {
 		electronOptionsDefaults.autoHideMenuBar = true;
 	}
 
-	var electronOptions = Object.assign({}, electronOptionsDefaults, config.electronOptions);
+	const electronOptions = Object.assign({}, electronOptionsDefaults, config.electronOptions);
 
 	// Create the browser window.
 	mainWindow = new BrowserWindow(electronOptions);
@@ -50,20 +52,30 @@ function createWindow() {
 	// and load the index.html of the app.
 	// If config.address is not defined or is an empty string (listening on all interfaces), connect to localhost
 
-	var prefix;
+	let prefix;
 	if (config["tls"] !== null && config["tls"]) {
 		prefix = "https://";
 	} else {
 		prefix = "http://";
 	}
 
-	var address = (config.address === void 0) | (config.address === "") ? (config.address = "localhost") : config.address;
+	let address = (config.address === void 0) | (config.address === "") ? (config.address = "localhost") : config.address;
 	mainWindow.loadURL(`${prefix}${address}:${config.port}`);
 
 	// Open the DevTools if run with "npm start dev"
 	if (process.argv.includes("dev")) {
+		if (process.env.JEST_WORKER_ID !== undefined) {
+			// if we are running with jest
+			const devtools = new BrowserWindow(electronOptions);
+			mainWindow.webContents.setDevToolsWebContents(devtools.webContents);
+		}
 		mainWindow.webContents.openDevTools();
 	}
+
+	// simulate mouse move to hide black cursor on start
+	mainWindow.webContents.on("dom-ready", (event) => {
+		mainWindow.webContents.sendInputEvent({ type: "mouseMove", x: 0, y: 0 });
+	});
 
 	// Set responders for window events.
 	mainWindow.on("closed", function () {
@@ -96,7 +108,12 @@ app.on("ready", function () {
 
 // Quit when all windows are closed.
 app.on("window-all-closed", function () {
-	createWindow();
+	if (process.env.JEST_WORKER_ID !== undefined) {
+		// if we are running with jest
+		app.quit();
+	} else {
+		createWindow();
+	}
 });
 
 app.on("activate", function () {
@@ -125,7 +142,7 @@ app.on("before-quit", (event) => {
 
 // Start the core application if server is run on localhost
 // This starts all node helpers and starts the webserver.
-if (["localhost", "127.0.0.1", "::1", "::ffff:127.0.0.1", undefined].indexOf(config.address) > -1) {
+if (["localhost", "127.0.0.1", "::1", "::ffff:127.0.0.1", undefined].includes(config.address)) {
 	core.start(function (c) {
 		config = c;
 	});

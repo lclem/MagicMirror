@@ -18,22 +18,23 @@ To run ESLint, use `npm run lint:js`.
 
 We use [StyleLint](https://stylelint.io) to lint our CSS. Our configuration is in our .stylelintrc file.
 
-To run StyleLint, use `npm run lint:style`.
+To run StyleLint, use `npm run lint:css`.
 
 ### Submitting Issues
 
 Please only submit reproducible issues.
 
 If you're not sure if it's a real bug or if it's just you, please open a topic on the forum: [https://forum.magicmirror.builders/category/15/bug-hunt](https://forum.magicmirror.builders/category/15/bug-hunt)
+
 Problems installing or configuring your MagicMirror? Check out: [https://forum.magicmirror.builders/category/10/troubleshooting](https://forum.magicmirror.builders/category/10/troubleshooting)
 
 When submitting a new issue, please supply the following information:
 
-**Platform**: Place your platform here... give us your web browser/Electron version _and_ your hardware (Raspberry Pi 2/3, Windows, Mac, Linux, System V UNIX).
+**Platform**: Place your platform here... give us your web browser/Electron version _and_ your hardware (Raspberry Pi 2/3/4, Windows, Mac, Linux, System V UNIX).
 
-**Node Version**: Make sure it's version 0.12.13 or later.
+**Node Version**: Make sure it's version 12 or later (recommended is 14).
 
-**MagicMirror Version**: Now that the versions have split, tell us if you are using the PHP version (v1) or the newer JavaScript version (v2).
+**MagicMirror Version**: Please let us know which version of MagicMirror you are running. It can be found in the `package.json` file.
 
 **Description**: Provide a detailed description about the issue and include specific details to help us understand the problem. Adding screenshots will help describing the problem.
 
